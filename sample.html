@@ -1,0 +1,80 @@
+<!-- 
+tldr: NEVER TOUCH THE DOM!!!1
+
+Two notes before looking at code:
+1. Binding
+  1 way (a la Mustache, but with binding, so it changes as the model updates: {{myScopeModel}})
+  2 way (user can update model, or javascript can, this is usually an input field with ng-model="myScopeModel")
+
+2. Directives
+  All the stuff in the HTML that's not HTML (chunk of code that encapsulates logic, models, and potentially a view partial)
+  -built in dirctives (usually anything that starts with ng is a built-in directive: ng-change, ng-repeat, ng-click)
+  -custom directives (none are created in this example)
+
+At the start of the body, we have <div ng-controller="TodoCtrl">...</div>.  As a result, all the elements inside this div have access to anything in the TodoCtrl's scope.  So for example, when you click the 'Add' button, ng-click="addTodo()" causes the addTodo fn. of the TodoCtrl to be called.  As you'll see, due to model binding, there's no code involved in updated the DOM (or even touching it), just models.  Another neat point: {{getTotalTodos()}} is actually a fn. not a model, but Angular still updates it as its return value changes.
+ -->
+
+<html ng-app>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+    <style>.done { color: grey;}.incomplete { font-weight: bold; }</style>
+  </head>
+  <body>
+    <div ng-controller="TodoCtrl">
+      <h2>You've got {{getTotalTodos()}} things to do</h2>
+
+      <ul>
+        <li ng-repeat="todo in todos">
+          <input type="checkbox" ng-model="todo.done"/>
+          <span ng-class="{done: todo.done, incomplete: !todo.done}">{{todo.text}}</span>
+        </li>
+      </ul>
+
+      <form>
+        <input placeholder="New task..." type="text" class="newTask" ng-model="formTodoText"/>
+        <button ng-click="addTodo()">Add</button>
+      </form>
+      
+      <button ng-click="clearCompleted()">Clear completed</button>
+
+      <div class="debug" style="color: gray;">
+      <br><br>
+        <h3>Angular Models under the hood:</h3>
+          $scope.todos: <pre>{{todos | json}}</pre>
+          <br>$scope.formTodoText: <pre>{{formTodoText | json}}</pre>
+      </div>
+
+    </div>
+
+  </body>
+
+  <script type="text/javascript">
+    function TodoCtrl($scope) {
+
+      $scope.todos = [
+        {text: 'JS Roundtable', done: false},
+        {text:'Buy groceries', done: false}
+      ];
+      
+      $scope.getTotalTodos = function () {
+        var incompleteTasks = _.filter($scope.todos, function(todo) {
+          return !todo.done;
+        });
+        return incompleteTasks.length;
+      };
+      
+      $scope.addTodo = function () {
+        $scope.todos.push({text:$scope.formTodoText, done:false});
+        $scope.formTodoText = '';
+      };
+      
+      $scope.clearCompleted = function () {
+        $scope.todos = _.filter($scope.todos, function(todo){
+          return !todo.done;
+        });
+      };
+    }
+  </script>
+  
+</html>
