@@ -1,0 +1,114 @@
+<!-- <!DOCTYPE html>
+<html ng-app="lab1">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body ng-init="a=1;b=2;">
+<p>I can add: {{ a }} + {{ b }} =  {{ a + b }}</p>
+  <input type="text" ng-model="text" />
+
+
+  <p ng-bind="text"></p>
+
+  <div ng-class="class1" ng-model="class1">
+   Bootstrap component
+  </div>
+</body>
+</html>
+ -->
+
+
+<!DOCTYPE html>
+<html ng-app="lab2">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body>
+	<button ng-click="count = count + 1" ng-init="count = 0">
+	  Increment
+	</button>
+	<p>Count: {{count}}</p>
+
+	<div ng-controller="tiram"><hr>
+	  <button ng-click="showTiramisu = true">show</button>
+	  <button ng-click="showTiramisu = fale">hide</button>
+	  <img src="http://zizzamia.github.io/taste-of-angularjs/img/tiramisu-logo.png" ng-show="showTiramisu" />
+	 </div>
+	<hr>
+
+	<ul ng-controller="cofshops">
+	  <li ng-repeat="coffee in coffeeShopsList">
+	    {{ coffee }}
+	  </li>
+	</ul>
+
+	<hr>
+
+	<div ng-controller="filterex">
+	  <input ng-model="searchFilter">
+	  <table>
+	    <tr><th>Name</th><th>SF Location</th></tr>
+	    <tr ng-repeat="coffee in coffeeShopsDict | filter:searchFilter">
+	      <td>{{ coffee.name }}</td>
+	      <td>{{ coffee.sfLocation }}</td>
+	    </tr>
+	  </table>
+	</div>
+
+	<hr>
+<!--
+	<div ng-controller="orderBy">
+	  <input ng-model="selectedKeyOrder">
+	  <table>
+	    <tr><th>Name</th><th>SF Location</th></tr>
+	    <tr ng-repeat="coffee in coffeeShops | orderBy:selectedKeyOrder">
+	      <td>{{ coffee.name }}</td>
+	      <td>{{ coffee.sfLocation }}</td>
+	    </tr>
+	  </table>
+	</div>
+ -->
+
+  <script>
+    angular.module('lab2', [])
+
+		.controller('tiram', function($scope) {
+		  $scope.showTiramisu = true;
+		  $scope.show = function () {
+		    $scope.showTiramisu = true;
+		  };
+		  $scope.hide = function () {
+		    $scope.showTiramisu = false;
+		  };
+		})
+
+		.controller('cofshops', function($scope) {
+		  $scope.coffeeShopsList = ['Ritual Coffee', 'Blue Bottle',
+		                        'Philz', 'Coffee Bar'];
+		})
+
+		.controller('filterex', function($scope) {
+	  $scope.coffeeShopsDict = [{ 'name': 'Ritual Coffee', 'sfLocation': 'Hayes Valley' },
+	                        { 'name': 'Blue Bottle', 'sfLocation': 'Hayes Valley' },
+	                        { 'name': 'Coffee Bar', 'sfLocation': 'FiDi' }];
+		})
+
+		// .controller('orderBy', function($scope) {
+		//   $scope.coffeeShops = [ { 'name': 'Ritual Coffee', 'sfLocation': 'Hayes Valley' }, ... ];
+		// });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
