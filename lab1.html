@@ -23,17 +23,20 @@
 <html ng-app="lab2">
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 </head>
 <body>
+  <header></header>
+
 	<button ng-click="count = count + 1" ng-init="count = 0">
 	  Increment
 	</button>
 	<p>Count: {{count}}</p>
 
 	<div ng-controller="tiram"><hr>
+		  <button ng-click="showTiramisu = false">hide</button>
 	  <button ng-click="showTiramisu = true">show</button>
-	  <button ng-click="showTiramisu = fale">hide</button>
 	  <img src="http://zizzamia.github.io/taste-of-angularjs/img/tiramisu-logo.png" ng-show="showTiramisu" />
 	 </div>
 	<hr>
@@ -71,6 +74,24 @@
 	</div>
  -->
 
+ <!-- <div class="row">
+    <div class="col-xs-6" ng-controller="tasteController">
+      <button class="btn btn-default">Increment</button>
+      <br />
+      <ul>
+        <li ng-repeat="item in listItem" ng-bind="item"></li>
+      </ul>
+    </div>
+    <div class="col-xs-6" ng-controller="awesomeController">
+      <br />
+      <ul>
+        <li ng-repeat="item in listMyItem" ng-bind="item"></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer></footer> -->
+
   <script>
     angular.module('lab2', [])
 
@@ -98,6 +119,65 @@
 		// .controller('orderBy', function($scope) {
 		//   $scope.coffeeShops = [ { 'name': 'Ritual Coffee', 'sfLocation': 'Hayes Valley' }, ... ];
 		// });
+	// .factory('items', function () {
+		// 	var listItem = [];
+		// 	return{
+		// 		'add' : function(item) {
+		// 			listItem.push(item);
+		// 		},
+		// 		'get': function(){
+		// 			return listItem;
+		// 		}
+		// 	}
+
+  //   })
+
+	// .controller('tasteController', function($scope, items) {
+
+  //     $scope.count = 0;
+  //     $scope.listItem = item.get();
+  //     $scope.increment = function () {
+  //       $scope.count += 1;
+  //     };
+
+  //     $scope.addItemToList = function (count) {
+  //     	item.add(count);
+
+  //     };
+
+  //     $scope.$watch('count', function(newVal, oldVal)){
+  //     	$scope.addItemToList(newVal);
+  //     }
+  //   })
+
+  //   .controller('awesomeController', function($scope, items) {
+  //   	$scope.listMyItem * item.get();
+  //   });
+
+ // .config(function() {
+ //    })
+ //    .controller('tasteController', function($scope) {
+ //      $scope.favoriteCoffee = 'Espresso';
+ //    })
+ //    .controller('awesomeController', function($scope) {
+ //      $scope.everything = 'is Awesome!';
+ //    });
+
+ // .config(function($routeProvider) {
+ //  $routeProvider.
+ //    when('/home', {
+ //      templateUrl: 'template1.html',
+ //      controller: 'HomeController'
+ //    }).
+ //    when('/link2', {
+ //      templateUrl: 'template2.html',
+ //      controller: 'Link2Controller'
+ //    }).
+ //    otherwise({
+ //      redirectTo: '/home'
+ //    });
+// });
+
   </script>
 </body>
 </html>
