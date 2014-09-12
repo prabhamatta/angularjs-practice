@@ -18,42 +18,10 @@
   </header>
 
   <div timeline class="content">
-
-    <div class="timeline-tweet-box">
-      <div class="home-tweet-box">
-        <img src="https://birdhouse.twitter.biz/people/photos/thumb/lzizzamia-thumb.jpg" alt="">
-        <div ng-if="!isOpenBox" ng-click="openBox()">
-          <input class="form-control" placeholder="{{ placeholder.insertTweet }}" />
-        </div>
-        <div ng-if="isOpenBox">
-          <textarea ng-model="tweet.text" class="form-control" rows="3"></textarea>
-          <button type="button" class="btn btn-info btn-sm"
-          ng-click="writeTweet()">Tweet</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="list-group timeline">
-      <div class="tweet" ng-repeat="tweet in listTweets">
-        <div class="tweet-content">
-          <img src="https://birdhouse.twitter.biz/people/photos/thumb/{{ tweet.username }}-thumb.jpg" alt="">
-          <div class="header">
-           {{ tweet.username }}
-
-           <!-- Applying filter -->
-          <!-- <i class="time">{{ tweet.timestamp | fromNow | fromNowTo }}</i> -->
-           <i class="time">{{ tweet.timestamp | fromNow }}</i>
-          </div>
-          <p>
-            {{ tweet.text }}
-            <button type="button" class="btn btn-default btn-xs">
-              <span class="fa fa-remove" ng-click="removeTweet($index)"></span>
-            </button>
-          </p>
-        </div>
-      </div>
-    </div>
-
+    <tweet-box></tweet-box>
+    <tweet-container>
+      <tweet data="tweet" remove='removeTweet($index)' ng-repeat="tweet in listTweets"></tweet>
+    </tweet-container>
   </div>
 
   <footer>
@@ -67,15 +35,19 @@
   <script>
     angular.module('tasteAngulajs', [
       'tasteAngulajs.filters',
+      'tasteAngulajs.api',
+      'tasteAngulajs.timeline',
       'tasteAngulajs.controllers'
     ])
 
     angular.module('tasteAngulajs.filters', [])
     .filter('fromNow', function(){
       return function(value){
-        // moment is a js library related to time
-        // http://momentjs.com/
-        // converts timestamp to 11 hours
+        /*
+        moment is a js library related to time
+        http://momentjs.com/
+        converts timestamp to 11 hours
+        */
         return moment(value).fromNow();
         // return value + ' Today';
       }
@@ -86,12 +58,115 @@
     //   }
     // })
 
-    angular.module('tasteAngulajs.controllers', [])
-    .controller('tasteController', function($scope) {
-      $scope.listTweets = [
+    angular.module('tasteAngulajs.api', [])
+    //factory method
+    .factory('timelineAPI', function(){
+      var listTweets = [
         { 'username': 'pmatta', 'text': 'Ciao', 'timestamp': 1410474730056 },
         { 'username': 'pmatta', 'text': 'Ciao due', 'timestamp': 1410474617870 }
       ];
+      return {
+        'get': function(){
+          return listTweets;
+        },
+        'create': function(text){
+          var tweet = {
+            'username': 'pmatta',
+            'text': text,
+            'timestamp': Date.now()
+          };
+          listTweets.splice(0,0,tweet);
+        }
+      }
+    })
+
+
+    angular.module('tasteAngulajs.timeline', [])
+    .directive('timeline',function(timelineAPI){
+      return{
+        restrict: 'A',
+        scope: true,
+        link: function(scope, element, attribute){
+          scope.listTweets = [];
+          scope.listTweets = timelineAPI.get();
+        }
+      }
+    })
+    .directive('tweetBox', function(timelineAPI){
+      return{
+        restrict:'E',
+        scope: true,
+        //injecting some other api into this
+        require: '^timeline',
+        template: ' <div class="timeline-tweet-box">'+
+      ' <div class="home-tweet-box">'+
+       '  <img src="https://birdhouse.twitter.biz/people/photos/thumb/pmatta-thumb.jpg" alt="">'+
+        ' <div ng-if="!isOpenBox" ng-click="openBox()">'+
+          ' <input class="form-control" placeholder="{{ placeholder.insertTweet }}" />'+
+        ' </div>'+
+        ' <div ng-if="isOpenBox">'+
+          ' <textarea ng-model="tweet.text" class="form-control" rows="3"></textarea>'+
+          ' <button type="button" class="btn btn-info btn-sm" ng-click="writeTweet()">Tweet</button>'+
+        ' </div>'+
+      ' </div> '+
+    ' </div>',
+      link: function(scope, element, attribute, timeline){
+        console.log(scope)  //scope
+        console.log(element) //element
+        console.log(attribute); //attribute
+        scope.isOpenBox = false;
+        scope.tweet = {};
+
+        scope.openBox = function(){
+          scope.isOpenBox = true;
+        }
+        scope.writeTweet = function(){
+          timelineAPI.create(scope.tweet.text);
+          scope.isOpenBox = false;
+          timeline.getTimeline();
+        }
+      }
+
+      }
+    })
+    .directive('tweetsContainer', function(){
+      return{
+        restrict: 'E',
+        scope: true,
+        replace: true,
+        template: '<div class="list-group timeline" ng-transclude></div>',
+        transclude: true
+      }
+    })
+    .directive('tweet',function(){
+      return{
+        restrict: 'E',
+        //isolate scope
+        scope: {
+          'data': '=',
+          'removeTweet': '&remove'
+        },
+        template: '<div class="tweet">' +
+        '<div class="tweet-content">'+
+         ' <img src="https://birdhouse.twitter.biz/people/photos/thumb/{{ data.username }}-thumb.jpg" alt="">'+
+         ' <div class="header">'+
+          ' {{ data.username }}'+
+           '<i class="time">{{ data.timestamp | fromNow }}</i> '+
+          '</div> <p> '+
+            '{{ data.text }}' +
+            '<button type="button" class="btn btn-default btn-xs"> '+
+             ' <span class="fa fa-remove" ng-click="removeTweet($index)"></span>'+
+           ' </button>'+
+         ' </p> </div>'+
+      '</div>'
+      }
+    })
+
+    angular.module('tasteAngulajs.controllers', [])
+    .controller('tasteController', function($scope) {
+      $scope.removeTweet = function(index){
+        console.log(index);
+      }
     });
   </script>
 </body>

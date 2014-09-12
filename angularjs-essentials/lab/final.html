@@ -20,20 +20,20 @@
   <div timeline class="content">
     <tweet-box write="writeTweet()"></tweet-box>
     <tweets-container>
-      <tweet data="tweet" remove="removeTweet($index)" 
+      <tweet data="tweet" remove="removeTweet($index)"
       ng-repeat="tweet in listTweets"></tweet>
     </tweets-container>
   </div>
 
   <footer>
     <p>
-      A tasty beginning Web Dev with 
-      <a href="http://angularjs.org/" target="_blank">AngularJS</a> by 
-      <a href="https://twitter.com/" target="_blank">@zizzamia</a>
+      A tasty beginning Web Dev with
+      <a href="http://angularjs.org/" target="_blank">AngularJS</a> by
+      <a href="https://twitter.com/" target="_blank">@prabhamatta</a>
     </p>
     <code>ng-class</code>
   </footer>
-          
+
   <script>
     angular.module('tasteAngulajs', [
       'tasteAngulajs.api',
@@ -42,7 +42,7 @@
       'tasteAngulajs.controllers'
     ])
     .config(function (timelineAPIProvider) {
-      timelineAPIProvider.setUsername('zizzamia');
+      timelineAPIProvider.setUsername('prabhamatta');
     })
     .constant('placeholder', {
       'insertTweet': 'Che c\'e\' di nuovo?'
@@ -100,7 +100,7 @@
           this.getTimeline = function () {
             $scope.listTweets = timelineAPI.get();
           };
-          this.getTimeline(); 
+          this.getTimeline();
         }
       };
     })
